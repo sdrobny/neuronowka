@@ -74,19 +74,21 @@ namespace Neuronowka
 
         public List<Double> ForwardPropagation(List<Double> Inputs)
         {
-            List<Double> NewInputs = new List<Double>();
+            
+            List<double> K = new List<double>();
+
             foreach (Layer layer in this.Layers)
             {
-
+                List<Double> NewInputs = new List<Double>();
                 foreach (Neuron neuron in layer.Neurons)
                 {
                     double Activation = neuron.Activate(Inputs);
                     neuron.Transfer(Activation);
                     NewInputs.Add(neuron.GetOutput());
                 }
-
+                 K = NewInputs;
             }
-            return NewInputs;
+            return K;
         }
 
 
@@ -150,19 +152,39 @@ namespace Neuronowka
                     {
                         Layers[i].Neurons[z].Weights[j] += LearningRate * Layers[i].Neurons[z].GetDelta() * Row[j];
                     }
-                    Layers[i].Neurons[z].Weights[-1] += LearningRate * Layers[i].Neurons[z].GetDelta();
+                    Layers[i].Neurons[z].Weights[Layers[i].Neurons[z].Weights.Count-1] += LearningRate * Layers[i].Neurons[z].GetDelta();
                 }
 
             }
 
         }
 
-        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, List<List<double>> OutPutData)
+        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator)
         {
             for (int i=0; i < Epoch; i++)
             {
                 double SumError = 0;
-                for
+                for (int r=0; r<InputData.Count;r++)
+                {
+                    List<double> OutPuts = ForwardPropagation(InputData[r]);
+                    List<double> Expected = new List<double>();
+
+                    for (int z=0; z<ZeroForIterator; z++)
+                    {
+                        Expected.Add(0);
+                    }
+
+                    Expected[Expected.Count-1] = 1;
+
+                    for (int x = 0; x<Expected.Count; x++)
+                    {
+                        SumError += Math.Pow(Expected[x] - OutPuts[x],2);
+                    }
+                    BackwardPropagateError(Expected);
+                    UpdateWeights(LearningRate, InputData[r]);
+                }
+
+                Console.WriteLine("Epoka:" +i + "Lrate" + LearningRate + "Error" + SumError);
             }
         }
 
@@ -183,7 +205,7 @@ namespace Neuronowka
             private double Min(int col, List<List<Double>> dataset)
             {
                 double min = double.MaxValue;
-
+            
                 for (int i = 0; i < dataset.Count; i++)
                 {
                     if (dataset[i][col] < min) min = dataset[i][col];
