@@ -19,17 +19,27 @@ namespace Neuronowka
             List<double> oo = new List<double>();
             InitializeComponent();
             Network n = new Network();
-            n.initNetwork(2, 1, 2);
+            
+            inn.Add(new List<double> { 2.7810836, 2.550537003,0 });
+            inn.Add(new List<double> { 1.465489372, 2.362125076,0 });
+            inn.Add(new List<double> { 3.396561688, 4.400293529,1 });
+
+            int Noutputs = 3;
+
+            n.initNetwork(2, 3, Noutputs);
             n.printNetwork();
-            inn.Add(new List<double> { 1, 0,1,1,0,1 });
+
+            n.TrainNetwork(inn, 0.7, 200, Noutputs);
+
+            /*
             testError.Add(new List<double> { 0, 1 });
             oo = n.ForwardPropagation(inn[0]);
             Console.WriteLine(oo[0]);
             Console.WriteLine(oo[1]);
             n.BackwardPropagateError(testError[0]);
 
-
-            foreach(Layer layer in n.Layers)
+            */
+            foreach (Layer layer in n.Layers)
             {
                 Console.WriteLine("Warstawa: ");
                 foreach(Neuron neuron in layer.Neurons)
@@ -43,7 +53,7 @@ namespace Neuronowka
                     }
                 }
             }
-
+            
 
             Random r = new Random();
             List<List<Double>> data = new List<List<double>>();

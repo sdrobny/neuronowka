@@ -20,7 +20,7 @@ namespace Neuronowka
         }
 
         public void initNetwork(int inputs, int hidden, int outputs)
-        {       
+        {
             //Kazdy neuron warstwy ukrytej ma tyle wag ile jest wejsc + 1 (bias)
             Layers.Add(new Layer(hidden, inputs + 1));
 
@@ -35,10 +35,10 @@ namespace Neuronowka
             {
                 Console.WriteLine("Layer: ");
 
-                foreach(Neuron n in l.Neurons)
+                foreach (Neuron n in l.Neurons)
                 {
                     Console.Write("      Neuron: ");
-                    foreach(Double w in n.Weights) Console.Write(w + " ");
+                    foreach (Double w in n.Weights) Console.Write(w + " ");
                     Console.WriteLine();
                 }
 
@@ -51,7 +51,7 @@ namespace Neuronowka
 
             using (var sr = File.OpenText(filename))
             {
-                
+
                 while (!sr.EndOfStream)
                 {
                     String line = sr.ReadLine();
@@ -66,7 +66,7 @@ namespace Neuronowka
                     //Console.Read();
 
                 }
-                
+
             }
 
             return values;
@@ -74,19 +74,21 @@ namespace Neuronowka
 
         public List<Double> ForwardPropagation(List<Double> Inputs)
         {
-            List<Double> NewInputs = new List<Double>();
+            
+            List<double> K = new List<double>();
+
             foreach (Layer layer in this.Layers)
             {
-
-                foreach(Neuron neuron in layer.Neurons)
+                List<Double> NewInputs = new List<Double>();
+                foreach (Neuron neuron in layer.Neurons)
                 {
                     double Activation = neuron.Activate(Inputs);
                     neuron.Transfer(Activation);
                     NewInputs.Add(neuron.GetOutput());
                 }
-
+                 K = NewInputs;
             }
-            return NewInputs;
+            return K;
         }
 
 
@@ -103,7 +105,7 @@ namespace Neuronowka
                         Double Error = 0.0;
                         foreach (Neuron neuron in Layers[i + 1].Neurons)
                         {
-                            Error += (neuron.Weights[j] * neuron.GetDelta()); 
+                            Error += (neuron.Weights[j] * neuron.GetDelta());
                         }
                         Errors.Add(Error);
                     }
@@ -118,61 +120,123 @@ namespace Neuronowka
                     }
                 }
 
-                for (int j = 0; j < layer.Neurons.Count; j++ )
+                for (int j = 0; j < layer.Neurons.Count; j++)
                 {
                     layer.Neurons[j].SetDelta(Errors[j] * layer.Neurons[j].Derivative(layer.Neurons[j].GetOutput()));
                 }
-                
+
             }
-
-        //Funkcja liczaca max wartosc kolumny
-        private double Max(int col, List<List<Double>> dataset)
-        {
-            double max = double.MinValue;
-
-            for(int i = 0; i < dataset.Count; i++)
-            {
-                if (dataset[i][col] > max) max = dataset[i][col];
-            }
-
-            return max;
         }
 
-        //Funkcja liczaca minimalna wartosc kolumny
-        private double Min(int col, List<List<Double>> dataset)
+        public void UpdateWeights(double LearningRate, List<double> InputRow)
         {
-            double min = double.MaxValue;
 
-            for (int i = 0; i < dataset.Count; i++)
+            for (int i=0; i<Layers.Count; i++)
             {
-                if (dataset[i][col] < min) min = dataset[i][col];
-            }
+                List<double> Row = InputRow;
+                Row.RemoveAt(Row.Count - 1);
 
-            return min;
-        }
-
-        //Przeskalowanie wartosci na zakres 0 - 1 (Funkcji sigmoidalnej)
-        public List<List<Double>> NormalizeData(List<List<Double>> dataset)
-        {
-            //Wartosci min kolumn:
-            List<Double> MinValues = new List<Double>();
-            for (int i = 0; i < dataset[0].Count; i++) MinValues.Add(Min(i, dataset));
-
-            //Wartosci min kolumn:
-            List<Double> MaxValues = new List<Double>();
-            for (int i = 0; i < dataset[0].Count; i++) MaxValues.Add(Max(i, dataset));
-
-
-            foreach (List<Double> row in dataset)
-            {
-                for(int i =  0; i < row.Count; i++)
+                if (i != 0)
                 {
-                    row[i] = (row[i] - MinValues[i]) / (MaxValues[i] - MinValues[i]);
+                    Row.Clear();
+
+                    foreach (Neuron neuron in Layers[i-1].Neurons)
+                    {
+                        Row.Add(neuron.GetOutput());
+                    }
                 }
+
+                for (int z = 0; z < Layers[i].Neurons.Count; z++)
+                {
+                    for (int j=0; j<Row.Count; j++)
+                    {
+                        Layers[i].Neurons[z].Weights[j] += LearningRate * Layers[i].Neurons[z].GetDelta() * Row[j];
+                    }
+                    Layers[i].Neurons[z].Weights[Layers[i].Neurons[z].Weights.Count-1] += LearningRate * Layers[i].Neurons[z].GetDelta();
+                }
+
             }
 
-            return dataset;
-
         }
+
+        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator)
+        {
+            for (int i=0; i < Epoch; i++)
+            {
+                double SumError = 0;
+                for (int r=0; r<InputData.Count;r++)
+                {
+                    List<double> OutPuts = ForwardPropagation(InputData[r]);
+                    List<double> Expected = new List<double>();
+
+                    for (int z=0; z<ZeroForIterator; z++)
+                    {
+                        Expected.Add(0);
+                    }
+
+                    Expected[Expected.Count-1] = 1;
+
+                    for (int x = 0; x<Expected.Count; x++)
+                    {
+                        SumError += Math.Pow(Expected[x] - OutPuts[x],2);
+                    }
+                    BackwardPropagateError(Expected);
+                    UpdateWeights(LearningRate, InputData[r]);
+                }
+
+                Console.WriteLine("Epoka:" +i + "Lrate" + LearningRate + "Error" + SumError);
+            }
+        }
+
+            //Funkcja liczaca max wartosc kolumny
+            private double Max(int col, List<List<Double>> dataset)
+            {
+                double max = double.MinValue;
+
+                for (int i = 0; i < dataset.Count; i++)
+                {
+                    if (dataset[i][col] > max) max = dataset[i][col];
+                }
+
+                return max;
+            }
+
+            //Funkcja liczaca minimalna wartosc kolumny
+            private double Min(int col, List<List<Double>> dataset)
+            {
+                double min = double.MaxValue;
+            
+                for (int i = 0; i < dataset.Count; i++)
+                {
+                    if (dataset[i][col] < min) min = dataset[i][col];
+                }
+
+                return min;
+            }
+
+            //Przeskalowanie wartosci na zakres 0 - 1 (Funkcji sigmoidalnej)
+            public List<List<Double>> NormalizeData(List<List<Double>> dataset)
+            {
+                //Wartosci min kolumn:
+                List<Double> MinValues = new List<Double>();
+                for (int i = 0; i < dataset[0].Count; i++) MinValues.Add(Min(i, dataset));
+
+                //Wartosci min kolumn:
+                List<Double> MaxValues = new List<Double>();
+                for (int i = 0; i < dataset[0].Count; i++) MaxValues.Add(Max(i, dataset));
+
+
+                foreach (List<Double> row in dataset)
+                {
+                    for (int i = 0; i < row.Count; i++)
+                    {
+                        row[i] = (row[i] - MinValues[i]) / (MaxValues[i] - MinValues[i]);
+                    }
+                }
+
+                return dataset;
+
+            }
     }
 }
+
