@@ -85,6 +85,7 @@ namespace Neuronowka
                     NewInputs.Add(neuron.GetOutput());
                 }
 
+
             }
             return NewInputs;
         }
