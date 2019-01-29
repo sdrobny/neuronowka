@@ -10,7 +10,8 @@ namespace Neuronowka
     class Network
     {
 
-        List<Layer> Layers = new List<Layer>();
+        public List<Layer> Layers = new List<Layer>();
+        //List<double> oo = new List<double>();
 
 
         public Network()
@@ -19,12 +20,13 @@ namespace Neuronowka
         }
 
         public void initNetwork(int inputs, int hidden, int outputs)
-        {
+        {       
             //Kazdy neuron warstwy ukrytej ma tyle wag ile jest wejsc + 1 (bias)
             Layers.Add(new Layer(hidden, inputs + 1));
 
             //Kazdy neuron warstwy wyjsc. ma tyle wag ile jest ukrytych + 1 (bias) 
             Layers.Add(new Layer(outputs, hidden + 1));
+
         }
 
         public void printNetwork()
@@ -87,6 +89,42 @@ namespace Neuronowka
             return NewInputs;
         }
 
+
+        public void BackwardPropagateError(List<double> Expected)
+        {
+            for (int i = Layers.Count - 1; i >= 0; i--)
+            {
+                Layer layer = Layers[i];
+                List<double> Errors = new List<double>();
+                if (i != Layers.Count - 1)
+                {
+                    for (int j = 0; j < layer.Neurons.Count; j++)
+                    {
+                        Double Error = 0.0;
+                        foreach (Neuron neuron in Layers[i + 1].Neurons)
+                        {
+                            Error += (neuron.Weights[j] * neuron.GetDelta()); 
+                        }
+                        Errors.Add(Error);
+                    }
+                }
+                else
+                {
+                    int j = 0;
+                    foreach (Neuron neuron in layer.Neurons)
+                    {
+                        Errors.Add(Expected[j] - neuron.GetOutput());
+                        j++;
+                    }
+                }
+
+                for (int j = 0; j < layer.Neurons.Count; j++ )
+                {
+                    layer.Neurons[j].SetDelta(Errors[j] * layer.Neurons[j].Derivative(layer.Neurons[j].GetOutput()));
+                }
+                
+            }
+
         //Funkcja liczaca max wartosc kolumny
         private double Max(int col, List<List<Double>> dataset)
         {
@@ -134,6 +172,7 @@ namespace Neuronowka
             }
 
             return dataset;
+
         }
     }
 }
