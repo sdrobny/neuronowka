@@ -69,5 +69,22 @@ namespace Neuronowka
 
             return values;
         }
+
+        public List<Double> ForwardPropagation(List<Double> Inputs)
+        {
+            List<Double> NewInputs = new List<Double>();
+            foreach (Layer layer in this.Layers)
+            {
+
+                foreach(Neuron neuron in layer.Neurons)
+                {
+                    double Activation = neuron.Activate(Inputs);
+                    neuron.Transfer(Activation);
+                    NewInputs.Add(neuron.GetOutput());
+                }
+
+            }
+            return NewInputs;
+        }
     }
 }
