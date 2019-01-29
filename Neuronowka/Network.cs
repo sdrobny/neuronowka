@@ -103,7 +103,7 @@ namespace Neuronowka
                         Double Error = 0.0;
                         foreach (Neuron neuron in Layers[i + 1].Neurons)
                         {
-                            Error += (neuron.Weights[j] * neuron.GetDelta()); 
+                            Error += (neuron.Weights[j] * neuron.GetDelta());
                         }
                         Errors.Add(Error);
                     }
@@ -118,12 +118,13 @@ namespace Neuronowka
                     }
                 }
 
-                for (int j = 0; j < layer.Neurons.Count; j++ )
+                for (int j = 0; j < layer.Neurons.Count; j++)
                 {
                     layer.Neurons[j].SetDelta(Errors[j] * layer.Neurons[j].Derivative(layer.Neurons[j].GetOutput()));
                 }
-                
+
             }
+        }
 
         //Funkcja liczaca max wartosc kolumny
         private double Max(int col, List<List<Double>> dataset)
