@@ -89,6 +89,7 @@ namespace Neuronowka
             return NewInputs;
         }
 
+
         public void BackwardPropagateError(List<double> Expected)
         {
             for (int i = Layers.Count - 1; i >= 0; i--)
@@ -123,6 +124,55 @@ namespace Neuronowka
                 }
                 
             }
+
+        //Funkcja liczaca max wartosc kolumny
+        private double Max(int col, List<List<Double>> dataset)
+        {
+            double max = double.MinValue;
+
+            for(int i = 0; i < dataset.Count; i++)
+            {
+                if (dataset[i][col] > max) max = dataset[i][col];
+            }
+
+            return max;
+        }
+
+        //Funkcja liczaca minimalna wartosc kolumny
+        private double Min(int col, List<List<Double>> dataset)
+        {
+            double min = double.MaxValue;
+
+            for (int i = 0; i < dataset.Count; i++)
+            {
+                if (dataset[i][col] < min) min = dataset[i][col];
+            }
+
+            return min;
+        }
+
+        //Przeskalowanie wartosci na zakres 0 - 1 (Funkcji sigmoidalnej)
+        public List<List<Double>> NormalizeData(List<List<Double>> dataset)
+        {
+            //Wartosci min kolumn:
+            List<Double> MinValues = new List<Double>();
+            for (int i = 0; i < dataset[0].Count; i++) MinValues.Add(Min(i, dataset));
+
+            //Wartosci min kolumn:
+            List<Double> MaxValues = new List<Double>();
+            for (int i = 0; i < dataset[0].Count; i++) MaxValues.Add(Max(i, dataset));
+
+
+            foreach (List<Double> row in dataset)
+            {
+                for(int i =  0; i < row.Count; i++)
+                {
+                    row[i] = (row[i] - MinValues[i]) / (MaxValues[i] - MinValues[i]);
+                }
+            }
+
+            return dataset;
+
         }
     }
 }
