@@ -10,7 +10,18 @@ namespace Neuronowka
     {
         public List<double> Weights = new List<double>();
 
-        private double Output; 
+        private double Output;
+        private double Delta ;
+
+        public double GetDelta()
+        {
+            return this.Delta;
+        }
+
+        public void SetDelta(double delta)
+        {
+            this.Delta = delta;
+        }
 
         public double GetOutput()
         {
@@ -49,7 +60,11 @@ namespace Neuronowka
             this.Output =  1.0 / (1.0 + Math.Exp((-Activation)));
         }
 
-
+        //Pochodna z outputu neuronu
+        public double Derivative(double output)
+        {
+            return output * (1.0 - output);
+        }
 
     }
 }
