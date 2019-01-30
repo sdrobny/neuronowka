@@ -160,7 +160,7 @@ namespace Neuronowka
 
         }
 
-        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator)
+        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator, List<List<double>> test)
         {
             for (int i=0; i < Epoch; i++)
             {
@@ -187,6 +187,10 @@ namespace Neuronowka
 
                 Console.WriteLine("Epoka:" +i + "Lrate" + LearningRate + "Error" + SumError);
             }
+
+            List<List<double>> TestCopy = new List<List<double>>(test);
+            TestPrediction(test, TestCopy);
+
         }
 
             //Funkcja liczaca max wartosc kolumny
@@ -238,13 +242,6 @@ namespace Neuronowka
                 return dataset;
 
             }
-
-        public double Predict(List<double> InputRow)
-        {
-            List<double> outputs = ForwardPropagation(InputRow);
-            return outputs.Max<double>();
-        }
-
 
     }
 }

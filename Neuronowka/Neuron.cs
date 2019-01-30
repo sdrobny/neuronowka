@@ -27,7 +27,12 @@ namespace Neuronowka
         {
             return this.Output;
         }
-        
+
+        public void SetOutput(double value)
+        {
+            this.Output = value;
+        }
+
         //Konstruktor neuronu, inicjacja wag losowymi wartościami
         public Neuron(int weightsCount)
         {
@@ -58,7 +63,7 @@ namespace Neuronowka
         //Funkcja transferu
         public void Transfer(Double Activation)
         {
-            this.Output =  1.0 / (1.0 + Math.Exp((-Activation)));
+            SetOutput(1.0 / (1.0 + Math.Exp(-Activation)));
         }
 
         //Pochodna z outputu neuronu
