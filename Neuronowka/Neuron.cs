@@ -10,7 +10,7 @@ namespace Neuronowka
     {
         public List<double> Weights = new List<double>();
 
-        private double Output;
+        private double Output=0;
         private double Delta ;
 
         public double GetDelta()
@@ -36,7 +36,6 @@ namespace Neuronowka
         //Konstruktor neuronu, inicjacja wag losowymi wartościami
         public Neuron(int weightsCount)
         {
-            this.Output = 0;
 
             Random r = new Random();
 
