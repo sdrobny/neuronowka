@@ -38,7 +38,7 @@ namespace Neuronowka
             for (int i = 0; i < weightsCount; i++)
             {
                 Weights.Add(r.NextDouble());
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(10);
             }
 
         }
