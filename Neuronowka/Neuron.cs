@@ -10,7 +10,7 @@ namespace Neuronowka
     {
         public List<double> Weights = new List<double>();
 
-        private double Output;
+        private double Output=0;
         private double Delta ;
 
         public double GetDelta()
@@ -27,11 +27,15 @@ namespace Neuronowka
         {
             return this.Output;
         }
-        
+
+        public void SetOutput(double value)
+        {
+            this.Output = value;
+        }
+
         //Konstruktor neuronu, inicjacja wag losowymi wartościami
         public Neuron(int weightsCount)
         {
-            this.Output = 0;
 
             Random r = new Random();
 
@@ -47,6 +51,7 @@ namespace Neuronowka
         public double Activate(List<Double> Inputs)
         {
             double activation = Weights[Weights.Count - 1];
+
             for (int i = 0; i < Weights.Count - 1; i++)
             {
                 activation += Weights[i] * Inputs[i];
@@ -57,7 +62,7 @@ namespace Neuronowka
         //Funkcja transferu
         public void Transfer(Double Activation)
         {
-            this.Output =  1.0 / (1.0 + Math.Exp((-Activation)));
+            SetOutput(1.0 / (1.0 + Math.Exp(-Activation)));
         }
 
         //Pochodna z outputu neuronu

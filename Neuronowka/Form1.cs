@@ -14,23 +14,14 @@ namespace Neuronowka
     {
         public Form1()
         {
-            /*
-            List<List<double>> inn = new List<List<double>>();
-            List<List<double>> testError = new List<List<double>>();
-            List<double> oo = new List<double>();
-            
-            Network n = new Network();
-            */
-
             InitializeComponent();
             Network network = new Network();
             List<List<Double>> data = network.loadCSV("files/karty.csv");
-            //data = network.NormalizeData(data);
+            List<List<Double>> test = network.loadCSV("files/test.csv");
+            data = network.NormalizeData(data);
             int Noutputs = 28;
-            network.initNetwork(13, 5, Noutputs);
-            network.TrainNetwork(data, 0.7, 200, Noutputs);
-
-
+            network.initNetwork(13, 13, Noutputs);
+            network.TrainNetwork(data, 0.1, 200, Noutputs, test);
 
 
             foreach (Layer layer in network.Layers)
