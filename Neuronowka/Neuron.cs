@@ -47,6 +47,7 @@ namespace Neuronowka
         public double Activate(List<Double> Inputs)
         {
             double activation = Weights[Weights.Count - 1];
+
             for (int i = 0; i < Weights.Count - 1; i++)
             {
                 activation += Weights[i] * Inputs[i];

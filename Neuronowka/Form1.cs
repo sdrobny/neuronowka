@@ -20,16 +20,19 @@ namespace Neuronowka
             InitializeComponent();
             Network n = new Network();
             
-            inn.Add(new List<double> { 2.7810836, 2.550537003,0 });
-            inn.Add(new List<double> { 1.465489372, 2.362125076,0 });
-            inn.Add(new List<double> { 3.396561688, 4.400293529,1 });
+            inn.Add(new List<double> { 0, 0, 1, 64, 1066, 625, 0, 11.2, 0, 0, 0, 0, 0, 0});
+            inn.Add(new List<double> { 0, 0, 2, 64, 1066, 625, 1, 11, 1, 0, 0, 0, 1, 1});
+            //inn.Add(new List<double> { 0.396561688, 0.400293529,0,5212,1 });
+            //inn.Add(new List<double> { 0.396561688, 0.400293529,0.231256, 1 });
+            //inn.Add(new List<double> { 0.396561688, 0.400293529,0.8412, 1 });
+            //inn.Add(new List<double> { 0.396561688, 0.400293529,0.032121, 1 });
 
-            int Noutputs = 3;
+            int Noutputs = 4;
 
-            n.initNetwork(2, 3, Noutputs);
+            n.initNetwork(13, 13, 2);
             n.printNetwork();
 
-            n.TrainNetwork(inn, 0.7, 200, Noutputs);
+            n.TrainNetwork(inn, 0.7, 200, 2);
 
             /*
             testError.Add(new List<double> { 0, 1 });
