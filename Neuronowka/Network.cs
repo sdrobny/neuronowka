@@ -189,7 +189,6 @@ namespace Neuronowka
             }
 
             List<List<double>> TestCopy = new List<List<double>>(test);
-            TestPrediction(test, TestCopy);
 
         }
 
