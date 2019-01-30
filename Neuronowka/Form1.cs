@@ -15,19 +15,31 @@ namespace Neuronowka
         private int OutputsCount;
         private Network network;
         private List<List<Double>> data;
+        private List<List<Double>> testData;
+
 
         public Form1()
         {
             InitializeComponent();
-            network = new Network();
-            data = network.loadCSV("files/karty.csv");
-            data = network.NormalizeData(data);
+
+            //Inicjacja wartsoc inputow, etc.
             OutputsCount = 28;
-            network.initNetwork(13, 13, OutputsCount);
             labelInputsCount.Text = "13";
             labelHiddenNeurons.Text = "13";
             labelOutputNeurons.Text = OutputsCount.ToString();
 
+            //Stworzenie oraz inicjacja sieci
+            network = new Network();
+            network.initNetwork(13, 13, OutputsCount);
+
+            //Dane trenujace
+            data = network.loadCSV("files/karty.csv");
+            data = network.NormalizeData(data);
+            
+
+            //Dane testowe
+            testData = network.loadCSV("files/test.csv");
+            testData = network.NormalizeData(testData);
 
 
             /*
@@ -41,6 +53,7 @@ namespace Neuronowka
             */
 
 
+            
             foreach (Layer layer in network.Layers)
             {
                 Console.WriteLine("Warstawa: ");
@@ -55,6 +68,8 @@ namespace Neuronowka
                     }
                 }
             }
+            
+
 
             DrawNeurons(network, pictureBox1, Color.White, Color.Pink, Color.DarkMagenta);
             
@@ -182,7 +197,7 @@ namespace Neuronowka
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            network.TrainNetwork(data, (double)LRateInput.Value, (int)EpochsInput.Value, OutputsCount);
+            network.TrainNetwork(data, (double)LRateInput.Value, (int)EpochsInput.Value, OutputsCount, testData);
         }
     }
 }
