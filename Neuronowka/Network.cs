@@ -238,6 +238,14 @@ namespace Neuronowka
                 return dataset;
 
             }
+
+        public double Predict(List<double> InputRow)
+        {
+            List<double> outputs = ForwardPropagation(InputRow);
+            return outputs.Max<double>();
+        }
+
+
     }
 }
 
