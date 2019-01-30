@@ -176,9 +176,8 @@ namespace Neuronowka
             }
 
 
-            //Przypisanie do komponentu
+            //Przypisanie wygenerowanej bitmapy do komponentu
             pictureBox.Image = canvas;
-
         }
 
         private void buttonTrain_Click(object sender, EventArgs e)
