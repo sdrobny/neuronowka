@@ -18,14 +18,6 @@ namespace Neuronowka
 
         public Form1()
         {
-            /*
-            List<List<double>> inn = new List<List<double>>();
-            List<List<double>> testError = new List<List<double>>();
-            List<double> oo = new List<double>();
-            
-            Network n = new Network();
-            */
-
             InitializeComponent();
             network = new Network();
             data = network.loadCSV("files/karty.csv");
@@ -36,9 +28,17 @@ namespace Neuronowka
             labelHiddenNeurons.Text = "13";
             labelOutputNeurons.Text = OutputsCount.ToString();
 
-            //
 
 
+            /*
+            Network network = new Network();
+            List<List<Double>> data = network.loadCSV("files/karty.csv");
+            List<List<Double>> test = network.loadCSV("files/test.csv");
+            data = network.NormalizeData(data);
+            int Noutputs = 28;
+            network.initNetwork(13, 13, Noutputs);
+            network.TrainNetwork(data, 0.1, 200, Noutputs, test);
+            */
 
 
             foreach (Layer layer in network.Layers)
