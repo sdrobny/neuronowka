@@ -59,8 +59,9 @@ namespace Neuronowka
                     List<Double> values_row = new List<Double>();
                     foreach (String s in split)
                     {
+                        double tmp;
                         //Console.WriteLine(s);
-                        values_row.Add(Double.Parse(s));
+                        if ( Double.TryParse(s,out tmp) )values_row.Add(Double.Parse(s));
                     }
                     values.Add(values_row);
                     //Console.Read();
@@ -74,7 +75,7 @@ namespace Neuronowka
 
         public List<Double> ForwardPropagation(List<Double> Inputs)
         {
-            
+
             List<double> K = new List<double>();
 
             foreach (Layer layer in this.Layers)
@@ -86,7 +87,7 @@ namespace Neuronowka
                     neuron.Transfer(Activation);
                     NewInputs.Add(neuron.GetOutput());
                 }
-                 K = NewInputs;
+                K = NewInputs;
             }
             return K;
         }

@@ -14,12 +14,12 @@ namespace Neuronowka
     {
         public Form1()
         {
+            /*
             List<List<double>> inn = new List<List<double>>();
             List<List<double>> testError = new List<List<double>>();
             List<double> oo = new List<double>();
-            InitializeComponent();
-            Network n = new Network();
             
+<<<<<<< HEAD
             inn.Add(new List<double> { 0, 0, 1, 64, 1066, 625, 0, 11.2, 0, 0, 0, 0, 0, 0});
             inn.Add(new List<double> { 0, 0, 2, 64, 1066, 625, 1, 11, 1, 0, 0, 0, 1, 1});
             //inn.Add(new List<double> { 0.396561688, 0.400293529,0,5212,1 });
@@ -33,16 +33,23 @@ namespace Neuronowka
             n.printNetwork();
 
             n.TrainNetwork(inn, 0.7, 200, 2);
-
-            /*
-            testError.Add(new List<double> { 0, 1 });
-            oo = n.ForwardPropagation(inn[0]);
-            Console.WriteLine(oo[0]);
-            Console.WriteLine(oo[1]);
-            n.BackwardPropagateError(testError[0]);
-
+=======
+            Network n = new Network();
             */
-            foreach (Layer layer in n.Layers)
+
+            InitializeComponent();
+            Network network = new Network();
+            List<List<Double>> data = network.loadCSV("files/karty.csv");
+            //data = network.NormalizeData(data);
+            int Noutputs = 28;
+            network.initNetwork(13, 5, Noutputs);
+            network.TrainNetwork(data, 0.7, 200, Noutputs);
+
+
+>>>>>>> a4bd624eba1846c4c36a5755f66690ebdd5e6705
+
+
+            foreach (Layer layer in network.Layers)
             {
                 Console.WriteLine("Warstawa: ");
                 foreach(Neuron neuron in layer.Neurons)
@@ -50,48 +57,14 @@ namespace Neuronowka
                     Console.WriteLine("Neuron");
                     Console.WriteLine("Output: " + neuron.GetOutput());
                     Console.WriteLine("Delta: " +neuron.GetDelta());
-                    foreach(double weigh in neuron.Weights)
+                    foreach(double weight in neuron.Weights)
                     {
-                        Console.WriteLine("Waga: " + weigh);
+                        Console.WriteLine("Waga: " + weight);
                     }
                 }
             }
             
 
-            Random r = new Random();
-            List<List<Double>> data = new List<List<double>>();
-
-            
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-
-            for (int i = 0; i < 5; i++)
-            {
-                List<Double> tmp = new List<Double>();
-                for(int j = 0; j < 5; j++)
-                {
-                    tmp.Add(Double.Parse(r.Next(0, 450).ToString()));
-                }
-                data.Add(tmp);
-            }
-
-            foreach(List<Double> row in data)
-            {
-                foreach (Double x in row) Console.Write(x.ToString() + " ");
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
-
-            data = n.NormalizeData(data);
-
-
-            foreach (List<Double> row in data)
-            {
-                foreach (Double x in row) if (x.ToString().Length > 5) Console.Write(x.ToString().Substring(0,5) + " "); else Console.Write(x.ToString() + " ");
-                Console.WriteLine();
-            }
 
 
         }
