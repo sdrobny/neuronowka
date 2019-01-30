@@ -12,7 +12,12 @@ namespace Neuronowka
 
         public List<Layer> Layers = new List<Layer>();
         //List<double> oo = new List<double>();
+        private int inputsCount;
 
+        public int getInputsCount()
+        {
+            return inputsCount;
+        }
 
         public Network()
         {
@@ -26,6 +31,9 @@ namespace Neuronowka
 
             //Kazdy neuron warstwy wyjsc. ma tyle wag ile jest ukrytych + 1 (bias) 
             Layers.Add(new Layer(outputs, hidden + 1));
+
+            this.inputsCount = inputs;
+
 
         }
 

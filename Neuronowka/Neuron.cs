@@ -37,12 +37,14 @@ namespace Neuronowka
         public Neuron(int weightsCount)
         {
 
-            Random r = new Random();
+            //Random r = new Random();
+            //CryptoRandom cr = new CryptoRandom();
 
             for (int i = 0; i < weightsCount; i++)
             {
-                Weights.Add(r.NextDouble());
-                System.Threading.Thread.Sleep(10);
+                //CryptoRandom cr = ;
+                Weights.Add(new CryptoRandom().RandValue);
+                //System.Threading.Thread.Sleep(10);
             }
 
         }
