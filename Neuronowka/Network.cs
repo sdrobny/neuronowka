@@ -75,7 +75,7 @@ namespace Neuronowka
 
         public List<Double> ForwardPropagation(List<Double> Inputs)
         {
-            
+
             List<double> K = new List<double>();
 
             foreach (Layer layer in this.Layers)
@@ -87,7 +87,7 @@ namespace Neuronowka
                     neuron.Transfer(Activation);
                     NewInputs.Add(neuron.GetOutput());
                 }
-                 K = NewInputs;
+                K = NewInputs;
             }
             return K;
         }
