@@ -17,11 +17,14 @@ namespace Neuronowka
         private List<List<Double>> data;
         private List<List<Double>> testData;
 
+        
+        
+
 
         public Form1()
         {
             InitializeComponent();
-
+             
             //Inicjacja wartsoc inputow, etc.
             OutputsCount = 28;
             labelInputsCount.Text = "13";
@@ -29,47 +32,15 @@ namespace Neuronowka
             labelOutputNeurons.Text = OutputsCount.ToString();
 
             //Stworzenie oraz inicjacja sieci
-            network = new Network();
+            network = new Network(labelRMSValue, chartRMS, neuronsValuesView);
             network.initNetwork(13, 13, OutputsCount);
 
             //Dane trenujace
             data = network.loadCSV("files/karty.csv");
             data = network.NormalizeData(data);
+
+            network.updateTextBox();
             
-
-            //Dane testowe
-            testData = network.loadCSV("files/test.csv");
-            testData = network.NormalizeData(testData);
-
-
-            /*
-            Network network = new Network();
-            List<List<Double>> data = network.loadCSV("files/karty.csv");
-            List<List<Double>> test = network.loadCSV("files/test.csv");
-            data = network.NormalizeData(data);
-            int Noutputs = 28;
-            network.initNetwork(13, 13, Noutputs);
-            network.TrainNetwork(data, 0.1, 200, Noutputs, test);
-            */
-
-
-            
-            foreach (Layer layer in network.Layers)
-            {
-                Console.WriteLine("Warstawa: ");
-                foreach(Neuron neuron in layer.Neurons)
-                {
-                    Console.WriteLine("Neuron");
-                    Console.WriteLine("Output: " + neuron.GetOutput());
-                    Console.WriteLine("Delta: " +neuron.GetDelta());
-                    foreach(double weight in neuron.Weights)
-                    {
-                        Console.WriteLine("Waga: " + weight);
-                    }
-                }
-            }
-            
-
 
             DrawNeurons(network, pictureBox1, Color.White, Color.Pink, Color.DarkMagenta);
             
@@ -198,6 +169,7 @@ namespace Neuronowka
         private void buttonTrain_Click(object sender, EventArgs e)
         {
             network.TrainNetwork(data, (double)LRateInput.Value, (int)EpochsInput.Value, OutputsCount, testData);
+            
         }
     }
 }

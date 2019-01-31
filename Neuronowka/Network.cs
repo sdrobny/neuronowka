@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace Neuronowka
 {
@@ -13,15 +15,25 @@ namespace Neuronowka
         public List<Layer> Layers = new List<Layer>();
         //List<double> oo = new List<double>();
         private int inputsCount;
+        private Label RMSLabel;
+
+        //Dane do wykresu
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart;
+        private List<Double> errors;
+
+        // TextBox z wartosciami
+        TextBox textBox;
 
         public int getInputsCount()
         {
             return inputsCount;
         }
 
-        public Network()
+        public Network(Label RMSLabel, System.Windows.Forms.DataVisualization.Charting.Chart chart, TextBox tb)
         {
-
+            this.RMSLabel = RMSLabel;
+            this.chart = chart;
+            this.textBox = tb;
         }
 
         public void initNetwork(int inputs, int hidden, int outputs)
@@ -170,11 +182,14 @@ namespace Neuronowka
 
         public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator, List<List<double>> test)
         {
-            for (int i=0; i < Epoch; i++)
+            chart.Series[0].Points.Clear();
+
+            for (int i=1; i <= Epoch; i++)
             {
                 double SumError = 0;
                 for (int r=0; r<InputData.Count;r++)
                 {
+                    
                     List<double> OutPuts = ForwardPropagation(InputData[r]);
                     List<double> Expected = new List<double>();
 
@@ -193,7 +208,12 @@ namespace Neuronowka
                     UpdateWeights(LearningRate, InputData[r]);
                 }
 
-                Console.WriteLine("Epoka:" +i + "Lrate" + LearningRate + "Error" + SumError);
+                //Console.WriteLine("Epoka:" +i + "Lrate" + LearningRate + "Error" + SumError);
+                RMSLabel.Text = SumError.ToString() + "    (" + i + "/" + Epoch + ")";
+                updateChart(SumError, Epoch);
+                updateTextBox();
+                Thread.Sleep(2);
+                Application.DoEvents();
             }
 
             List<List<double>> TestCopy = new List<List<double>>(test);
@@ -248,6 +268,31 @@ namespace Neuronowka
 
                 return dataset;
 
+            }
+
+            public void updateChart(double error, int Epoch)
+            {
+                chart.Series[0].Points.Add(error, Epoch);
+            }
+
+            public void updateTextBox()
+            {
+                textBox.Clear();
+                String str = "";
+                for(int i = 0; i < Layers.Count; i++)
+                {
+                    if (i == 0) str += "WARSTWA UKRYTA" + Environment.NewLine + Environment.NewLine;
+                    else if (i == 1) str += "WARSTWA WYJSCIOWA" + Environment.NewLine;
+
+                    foreach(Neuron n in Layers[i].Neurons)
+                    {
+                    str += ">>>" + "Neuron - Output: " + n.GetOutput() + " Delta: " + n.GetDelta() + Environment.NewLine;
+                    str += "Wagi: [ ";
+                    foreach (Double w in n.Weights) str += w.ToString() + " ";
+                    str += " ] " + Environment.NewLine + Environment.NewLine;
+                    }
+                }
+                textBox.Text = str;
             }
 
     }
