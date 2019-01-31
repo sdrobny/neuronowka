@@ -180,7 +180,7 @@ namespace Neuronowka
 
         }
 
-        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator, List<List<double>> test)
+        public void TrainNetwork(List<List<double>>InputData, double LearningRate, int Epoch, int ZeroForIterator)
         {
             chart.Series[0].Points.Clear();
 
@@ -215,8 +215,6 @@ namespace Neuronowka
                 Thread.Sleep(2);
                 Application.DoEvents();
             }
-
-            List<List<double>> TestCopy = new List<List<double>>(test);
 
         }
 

@@ -15,18 +15,13 @@ namespace Neuronowka
         private int OutputsCount;
         private Network network;
         private List<List<Double>> data;
-        private List<List<Double>> testData;
-
-        
-        
-
 
         public Form1()
         {
             InitializeComponent();
              
             //Inicjacja wartsoc inputow, etc.
-            OutputsCount = 28;
+            OutputsCount = 8;
             labelInputsCount.Text = "13";
             labelHiddenNeurons.Text = "13";
             labelOutputNeurons.Text = OutputsCount.ToString();
@@ -43,10 +38,6 @@ namespace Neuronowka
             
 
             DrawNeurons(network, pictureBox1, Color.White, Color.Pink, Color.DarkMagenta);
-            
-
-
-
 
         }
 
@@ -168,7 +159,7 @@ namespace Neuronowka
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            network.TrainNetwork(data, (double)LRateInput.Value, (int)EpochsInput.Value, OutputsCount, testData);
+            network.TrainNetwork(data, (double)LRateInput.Value, (int)EpochsInput.Value, OutputsCount);
             
         }
     }
